@@ -2,6 +2,7 @@ const http = require("http");
 const url = require("url");
 var config = require("./config");
 var _data = require("./lib/data");
+var handlers = require("./lib/handlers");
 
 /* Cread File
 _data.create("test", "newFile", {"foo":"bar"}, function (err) {
@@ -81,21 +82,6 @@ const server = http.createServer(function (req, res) {
 server.listen(config.port, function () {
   console.log(`Server runing in port ${config.port}`);
 });
-
-// Definimos el objeto handlers que contendrá los manejadores de cada ruta
-var handlers = {};
-
-handlers.ping = function (data, callback) {
-  callback(200);
-};
-
-handlers.sample = function (data, callback) {
-  callback(406, { name: "sample handler" });
-};
-
-handlers.notFound = function (data, callback) {
-  callback(404);
-};
 
 // Definimos las rutas y el método asociadas a ellas
 var router = {
