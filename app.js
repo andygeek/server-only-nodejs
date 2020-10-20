@@ -3,6 +3,7 @@ const url = require("url");
 var config = require("./config");
 var _data = require("./lib/data");
 var handlers = require("./lib/handlers");
+var helpers = require("./lib/helpers");
 
 /* Cread File
 _data.create("test", "newFile", {"foo":"bar"}, function (err) {
@@ -37,7 +38,7 @@ const server = http.createServer(function (req, res) {
   var headers = req.headers;
 
   // Para obtener el método de la petición
-  var method = req.method;
+  var method = req.method.toLowerCase();
   // Para obtener los parámetros de la petición
   var queryString = parsedUrl.query;
 
@@ -63,7 +64,7 @@ const server = http.createServer(function (req, res) {
       method: method,
       headers: headers,
       queryStringObject: queryString,
-      payload: body,
+      payload: helpers.parseJsonToObject(body)
     };
 
     // Este método administra la petición y en base al callback que tiene asociado
@@ -87,4 +88,5 @@ server.listen(config.port, function () {
 var router = {
   ping: handlers.ping,
   sample: handlers.sample,
+  users: handlers.users,
 };
