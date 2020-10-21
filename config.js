@@ -2,14 +2,12 @@ var enviroments = {};
 
 enviroments.staging = {
   port: 3000,
-  envName: "staging",
-  hashingSecrete: "thisIsASecret"
+  envName: "develop",
 };
 
 enviroments.production = {
   port: 5000,
   envName: "production",
-  hashingSecrete: "thisIsASecret"
 };
 
 var currentEnviroment =
@@ -20,7 +18,7 @@ var currentEnviroment =
 var enviromentToExport =
   typeof enviroments[currentEnviroment] == "object"
     ? enviroments[currentEnviroment]
-    : enviroments.staging;
+    : enviroments.develop;
 
 
 module.exports = enviromentToExport;

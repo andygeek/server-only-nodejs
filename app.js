@@ -1,32 +1,6 @@
 const http = require("http");
 const url = require("url");
-var config = require("./config");
-var _data = require("./lib/data");
-var handlers = require("./lib/handlers");
-var helpers = require("./lib/helpers");
-
-/* Cread File
-_data.create("test", "newFile", {"foo":"bar"}, function (err) {
-  console.log("Este fue el error", err);  
-})
- */
-
-/* Read File
-_data.read("test", "newFile", function (err, data) {
-  console.log("Este fue el error", err, "y estos son los datos", data);  
-})
- */
-
-/* Update File
-_data.update("test", "newFile", {"name":"andygeek"}, function (err) {
-  console.log("Este fue el error", err);  
-})
- */
-
-// Delete File
-_data.delete("test", "newFile", function (err) {
-  console.log("Este fue el error", err);
-});
+const config = require("./config");
 
 const server = http.createServer(function (req, res) {
   // Para obtener la ruta
@@ -38,7 +12,7 @@ const server = http.createServer(function (req, res) {
   var headers = req.headers;
 
   // Para obtener el método de la petición
-  var method = req.method.toLowerCase();
+  var method = req.method;
   // Para obtener los parámetros de la petición
   var queryString = parsedUrl.query;
 
@@ -64,7 +38,7 @@ const server = http.createServer(function (req, res) {
       method: method,
       headers: headers,
       queryStringObject: queryString,
-      payload: helpers.parseJsonToObject(body)
+      payload: body,
     };
 
     // Este método administra la petición y en base al callback que tiene asociado
@@ -72,7 +46,8 @@ const server = http.createServer(function (req, res) {
     chosenHandler(data, function (statusCode, payload) {
       statusCodde = typeof statusCode == "number" ? statusCode : {};
       var payloadString = JSON.stringify(payload);
-      //res.setHeader("Content-Type","application/json")
+      // Convertirá nuestro response en un objeto Json
+      res.setHeader("Content-Type", "application/json");
       res.writeHead(statusCode);
       res.end(payloadString);
       console.log("Returning the response of ", statusCode, payloadString);
@@ -81,12 +56,26 @@ const server = http.createServer(function (req, res) {
 });
 
 server.listen(config.port, function () {
-  console.log(`Server runing in port ${config.port}`);
+  console.log(`Server runign at http://localhost/${config.port}`);
 });
+
+// Definimos el objeto handlers que contendrá los manejadores de cada ruta
+var handlers = {};
+
+handlers.ping = function (data, callback) {
+  callback(200);
+};
+
+handlers.sample = function (data, callback) {
+  callback(406, { name: "sample handler" });
+};
+
+handlers.notFound = function (data, callback) {
+  callback(404);
+};
 
 // Definimos las rutas y el método asociadas a ellas
 var router = {
   ping: handlers.ping,
   sample: handlers.sample,
-  users: handlers.users,
 };
