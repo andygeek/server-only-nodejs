@@ -2,14 +2,12 @@ const http = require("http");
 const url = require("url");
 var config = require("./config");
 var _data = require("./lib/data");
-var handlers = require("./lib/handlers");
-var helpers = require("./lib/helpers");
 
-/* Cread File
+// Cread File
 _data.create("test", "newFile", {"foo":"bar"}, function (err) {
   console.log("Este fue el error", err);  
 })
- */
+
 
 /* Read File
 _data.read("test", "newFile", function (err, data) {
@@ -23,11 +21,11 @@ _data.update("test", "newFile", {"name":"andygeek"}, function (err) {
 })
  */
 
-// Delete File
+/* Delete File
 _data.delete("test", "newFile", function (err) {
   console.log("Este fue el error", err);
 });
-
+*/
 const server = http.createServer(function (req, res) {
   // Para obtener la ruta
   var parsedUrl = url.parse(req.url);
@@ -84,9 +82,27 @@ server.listen(config.port, function () {
   console.log(`Server runing in port ${config.port}`);
 });
 
+// Definimos el objeto handlers que contendrá los manejadores de cada ruta
+var handlers = {};
+
+
+// Ping handler
+handlers.ping = function (data, callback) {
+  callback(200);
+};
+
+// Example handler
+handlers.sample = function (data, callback) {
+  callback(406, { name: "sample handler" });
+};
+
+// Not found handler
+handlers.notFound = function (data, callback) {
+  callback(404);
+};
+
 // Definimos las rutas y el método asociadas a ellas
 var router = {
   ping: handlers.ping,
   sample: handlers.sample,
-  users: handlers.users,
 };

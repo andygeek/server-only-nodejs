@@ -3,13 +3,11 @@ var enviroments = {};
 enviroments.staging = {
   port: 3000,
   envName: "staging",
-  hashingSecrete: "thisIsASecret"
 };
 
 enviroments.production = {
   port: 5000,
   envName: "production",
-  hashingSecrete: "thisIsASecret"
 };
 
 var currentEnviroment =
