@@ -8,14 +8,17 @@ var helpers = require("./lib/helpers");
 /* Cread File
 _data.create("test", "newFile", {"foo":"bar"}, function (err) {
   console.log("Este fue el error", err);  
-})
- */
+}) 
+*/
 
 /* Read File
 _data.read("test", "newFile", function (err, data) {
-  console.log("Este fue el error", err, "y estos son los datos", data);  
+  let nn = helpers.parseJsonToObject(data);
+  console.log("Este fue el error", err, "y estos son los datos");
+  console.log(nn.foo);
 })
- */
+*/
+
 
 /* Update File
 _data.update("test", "newFile", {"name":"andygeek"}, function (err) {
@@ -23,14 +26,15 @@ _data.update("test", "newFile", {"name":"andygeek"}, function (err) {
 })
  */
 
-// Delete File
+/* Delete File
 _data.delete("test", "newFile", function (err) {
   console.log("Este fue el error", err);
 });
+*/
 
 const server = http.createServer(function (req, res) {
   // Para obtener la ruta
-  var parsedUrl = url.parse(req.url);
+  var parsedUrl = url.parse(req.url, true);
   var path = parsedUrl.pathname;
   var trimmedPath = path.replace(/^\/+|\/+$/g, "");
 
@@ -40,7 +44,7 @@ const server = http.createServer(function (req, res) {
   // Para obtener el método de la petición
   var method = req.method.toLowerCase();
   // Para obtener los parámetros de la petición
-  var queryString = parsedUrl.query;
+  var queryStringObject = parsedUrl.query;
 
   // Para obtener el cuerpo de la petición
   let body = [];
@@ -63,7 +67,7 @@ const server = http.createServer(function (req, res) {
       trimmedPath: trimmedPath,
       method: method,
       headers: headers,
-      queryStringObject: queryString,
+      queryStringObject: queryStringObject,
       payload: helpers.parseJsonToObject(body)
     };
 
